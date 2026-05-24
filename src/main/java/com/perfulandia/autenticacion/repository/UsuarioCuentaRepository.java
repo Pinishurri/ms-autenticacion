@@ -17,8 +17,6 @@ public interface  UsuarioCuentaRepository extends JpaRepository<UsuarioCuenta, L
     // SELECT * FROM cuentas_usuario WHERE email_usuario = ?
     Optional<UsuarioCuenta> findByEmailUsuario(String emailUsuario);
     
-    //lo mismo de arriba pero en vez de email es el token de acceso
-    Optional<UsuarioCuenta> findByTokenDeAcceso(String tokenDeAcceso);
 
     
 }

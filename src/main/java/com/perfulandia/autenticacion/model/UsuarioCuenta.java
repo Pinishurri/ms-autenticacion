@@ -1,7 +1,5 @@
 package com.perfulandia.autenticacion.model;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -20,22 +18,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UsuarioCuenta {
-    //genera automaticamente las Prim_key
+    //genera automaticamente las id/Prim_key
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long idUsuario;
+
     //acá especifica que el email es unico, no puede ni repetirse ni estar vacio
     @Column (nullable=false, unique=true, length=100)
     private String emailUsuario;
+
     //clave protegida, nunca se guarda en texto plano
-    @Column (nullable=false)
-    private String contraseñaHasheada;
-    //token que el usuario usa para entrar al sistema
-    @Column (length =500)
-    private String tokenDeAcceso;
-    //token que se usa para obtener nuevo token de acceso sin tener que escribir la contraseña de nuevo
-    @Column (length =500)
-    private String tokenParaRenovar;
+    @Column (nullable=false)    
+    private String contrasenia;
 
     @Column (nullable=false)
     private int cantIntentosFallidos=0;
@@ -44,8 +38,6 @@ public class UsuarioCuenta {
     @Enumerated(EnumType.STRING)
     @Column(nullable=false)
     private EstadoDeCuenta estadoDeCuenta = EstadoDeCuenta.ACTIVA;
-
-    private LocalDateTime fechaUltimoAcceso;
 
     public enum EstadoDeCuenta{
         ACTIVA,
