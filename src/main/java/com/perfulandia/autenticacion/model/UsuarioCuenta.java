@@ -8,6 +8,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,16 +26,19 @@ public class UsuarioCuenta {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long idUsuario;
 
-    //acá especifica que el email es unico, no puede ni repetirse ni estar vacio
-    @Column (nullable=false, unique=true, length=100)
+    // @NotBlank significa que no puede llegar vacío ni con solo espacios
+    // @Email significa que tiene que tener formato de email válido (contener @ y dominio)
+    // @Size define el largo mínimo y máximo permitido del texto
+    @NotBlank(message = "El email no puede estar vacío")
+    @Email(message = "El email debe tener un formato válido")
+    @Column(nullable = false, unique = true, length = 100)
     private String emailUsuario;
 
-    //clave protegida, nunca se guarda en texto plano
-    @Column (nullable=false)    
+    @NotBlank(message = "La contraseña no puede estar vacía")
+    @Size(min = 6, max = 100, message = "La contraseña debe tener entre 6 y 100 caracteres")
+    @Column(nullable = false)   
     private String contrasenia;
 
-    @Column (nullable=false)
-    private int cantIntentosFallidos=0;
 
     // Estado actual de la cuenta: ACTIVA, BLOQUEADA o INACTIVA
     @Enumerated(EnumType.STRING)
