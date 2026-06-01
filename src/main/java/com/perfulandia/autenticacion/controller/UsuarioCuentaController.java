@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.perfulandia.autenticacion.dto.LoginDTO;
@@ -36,11 +35,9 @@ public class UsuarioCuentaController {
     @Autowired
     private UsuarioCuentaService servicioUsuarios;
 
-    // -------------------------------------------------------
     // POST /api/autenticacion/registro
     // @Valid activa las validaciones que pusimos en el DTO
     // @RequestBody convierte el JSON que llega en un objeto Java
-    // -------------------------------------------------------
     @PostMapping("/registro")
     public ResponseEntity<UsuarioCuenta> registrar(@Valid @RequestBody RegistroUsuarioDTO datosRegistro) {
         log.info("Solicitud de registro para email: {}", datosRegistro.getEmailUsuario());
@@ -60,9 +57,7 @@ public class UsuarioCuentaController {
         }
     }
 
-    // -------------------------------------------------------
     // POST /api/autenticacion/login
-    // -------------------------------------------------------
     @PostMapping("/login")
     public ResponseEntity<UsuarioCuenta> login(@Valid @RequestBody LoginDTO datosLogin) {
         log.info("Solicitud de login para email: {}", datosLogin.getEmailUsuario());
@@ -79,13 +74,11 @@ public class UsuarioCuentaController {
         }
     }
 
-    // -------------------------------------------------------
-    // POST /api/autenticacion/logout
-    // @RequestParam recibe el email como parámetro en la URL
-    // Ejemplo: /api/autenticacion/logout?email=juan@gmail.com
-    // -------------------------------------------------------
-    @PostMapping("/logout")
-    public ResponseEntity<String> cerrarSesion(@RequestParam String email) {
+    // POST /api/autenticacion/logout/{email}
+    // @PathVariable recibe el email directamente desde la URL
+    // Ejemplo: /api/autenticacion/logout/juan@gmail.com
+    @PostMapping("/logout/{email}")
+    public ResponseEntity<String> cerrarSesion(@PathVariable String email) {
         log.info("Solicitud de cierre de sesión para email: {}", email);
 
         boolean exitoso = servicioUsuarios.cerrarSesion(email);
@@ -97,11 +90,10 @@ public class UsuarioCuentaController {
         }
     }
 
-    // -------------------------------------------------------
-    // POST /api/autenticacion/recuperar-contrasenia
-    // -------------------------------------------------------
-    @PostMapping("/recuperar-contrasenia")
-    public ResponseEntity<String> recuperarContrasenia(@RequestParam String email) {
+    // POST /api/autenticacion/recuperar-contrasenia/{email}
+    // Ejemplo: /api/autenticacion/recuperar-contrasenia/juan@gmail.com
+    @PostMapping("/recuperar-contrasenia/{email}")
+    public ResponseEntity<String> recuperarContrasenia(@PathVariable String email) {
         log.info("Solicitud de recuperación de contraseña para email: {}", email);
 
         boolean exitoso = servicioUsuarios.recuperarContrasena(email);
@@ -113,24 +105,21 @@ public class UsuarioCuentaController {
         }
     }
 
-    // -------------------------------------------------------
-    // GET /api/autenticacion/validar-token
+    // GET /api/autenticacion/validar-token/{email}
     // Lo usan los otros microservicios para verificar si
     // un usuario existe en el sistema
-    // -------------------------------------------------------
-    @GetMapping("/validar-token")
-    public ResponseEntity<Boolean> validarToken(@RequestParam String email) {
+    // Ejemplo: /api/autenticacion/validar-token/juan@gmail.com
+    @GetMapping("/validar-token/{email}")
+    public ResponseEntity<Boolean> validarToken(@PathVariable String email) {
         log.info("Solicitud de validación de token para email: {}", email);
 
         boolean esValido = servicioUsuarios.validarToken(email);
         return new ResponseEntity<>(esValido, HttpStatus.OK);
     }
 
-    // -------------------------------------------------------
     // PUT /api/autenticacion/bloquear/{id}
     // @PathVariable recibe el id directamente desde la URL
     // Ejemplo: /api/autenticacion/bloquear/3
-    // -------------------------------------------------------
     @PutMapping("/bloquear/{id}")
     public ResponseEntity<String> bloquearCuenta(@PathVariable Long id) {
         log.info("Solicitud de bloqueo de cuenta con id: {}", id);
@@ -144,10 +133,8 @@ public class UsuarioCuentaController {
         }
     }
 
-    // -------------------------------------------------------
     // GET /api/autenticacion/usuarios
     // Lista todos los usuarios, útil para el Administrador
-    // -------------------------------------------------------
     @GetMapping("/usuarios")
     public ResponseEntity<List<UsuarioCuenta>> listarUsuarios() {
         log.info("Solicitud para listar todos los usuarios");
